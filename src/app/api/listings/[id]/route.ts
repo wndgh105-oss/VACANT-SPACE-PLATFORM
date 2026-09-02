@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export async function GET(_request: Request, { params }: { params: { id: string } }) {
@@ -12,4 +14,21 @@ export async function GET(_request: Request, { params }: { params: { id: string 
   })
 
   return NextResponse.json({ ...listing, equipmentPackages })
+}
+
+export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== 'LANDLORD') {
+    return NextResponse.json({ error: 'forbidden' }, { status: 403 })
+  }
+
+  const listing = await prisma.listing.findUnique({ where: { id: params.id } })
+  if (!listing || listing.landlordId !== session.user.id) {
+    return NextResponse.json({ error: 'forbidden' }, { status: 403 })
+  }
+
+  const body = await request.json()
+  const updated = await prisma.listing.update({ where: { id: params.id }, data: body })
+
+  return NextResponse.json(updated)
 }
