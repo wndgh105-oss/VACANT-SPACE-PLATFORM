@@ -61,6 +61,11 @@ export async function GET(request: Request) {
     where = { ...where, status: statusFilter as never }
   }
 
+  const listingId = searchParams.get('listingId')
+  if (listingId) {
+    where = { ...where, listingId }
+  }
+
   const applications = await prisma.application.findMany({
     where,
     include: { listing: true },
