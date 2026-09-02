@@ -15,18 +15,14 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     return NextResponse.json({ error: 'not found' }, { status: 404 })
   }
 
-  const updated = await prisma.application.update({
-    where: { id: params.id },
-    data: { status },
-  })
-
   const listingStatusUpdate = computeListingStatusUpdate(current.status, status)
-  if (listingStatusUpdate) {
-    await prisma.listing.update({
-      where: { id: current.listingId },
-      data: { status: listingStatusUpdate },
-    })
-  }
+  const operations = [
+    prisma.application.update({ where: { id: params.id }, data: { status } }),
+    ...(listingStatusUpdate
+      ? [prisma.listing.update({ where: { id: current.listingId }, data: { status: listingStatusUpdate } })]
+      : []),
+  ]
+  const [updated] = await prisma.$transaction(operations)
 
   return NextResponse.json(updated)
 }

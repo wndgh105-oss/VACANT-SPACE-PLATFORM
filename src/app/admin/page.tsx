@@ -34,11 +34,15 @@ export default function AdminApplicationsPage() {
       const confirmed = window.confirm('이 공실이 자동으로 마감 처리됩니다. 계속할까요?')
       if (!confirmed) return
     }
-    await fetch(`/api/applications/${id}`, {
+    const res = await fetch(`/api/applications/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status }),
     })
+    if (!res.ok) {
+      window.alert('상태 변경에 실패했어요. 잠시 후 다시 시도해주세요.')
+      return
+    }
     setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)))
   }
 
