@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  TENANT
+  LANDLORD
+  ADMIN
+}
+
+enum BusinessType {
+  CAFE
+  RETAIL
+  OTHER
+}
+
+enum ListingStatus {
+  OPEN
+  CLOSED
+}
+
+enum ApplicationStatus {
+  PENDING
+  CONTACTING
+  CONFIRMED
+  REJECTED
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         Role
+  createdAt    DateTime      @default(now())
+  listings     Listing[]     @relation("LandlordListings")
+  applications Application[] @relation("TenantApplications")
+  favorites    Favorite[]
+}
+
+model Listing {
+  id                String         @id @default(cuid())
+  landlordId        String
+  landlord          User           @relation("LandlordListings", fields: [landlordId], references: [id])
+  address           String
+  area              Float
+  monthlyRent       Int
+  deposit           Int
+  photos            String[]
+  contractDurations Int[]
+  businessTypes     BusinessType[]
+  status            ListingStatus  @default(OPEN)
+  createdAt         DateTime       @default(now())
+  applications      Application[]
+  favorites         Favorite[]
+}
+
+model EquipmentPackage {
+  id           String       @id @default(cuid())
+  businessType BusinessType @unique
+  name         String
+  items        String[]
+  monthlyFee   Int
+  createdAt    DateTime     @default(now())
+}
+
+model Application {
+  id               String            @id @default(cuid())
+  listingId        String
+  listing          Listing           @relation(fields: [listingId], references: [id])
+  tenantId         String
+  tenant           User              @relation("TenantApplications", fields: [tenantId], references: [id])
+  applicantName    String
+  phone            String
+  desiredDuration  Int
+  desiredStartDate DateTime
+  message          String?
+  status           ApplicationStatus @default(PENDING)
+  createdAt        DateTime          @default(now())
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    User     @relation(fields: [tenantId], references: [id])
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([tenantId, listingId])
+}
