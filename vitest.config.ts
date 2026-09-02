@@ -9,6 +9,7 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     globals: true,
     pool: 'threads',
+    include: ['tests/unit/**/*.{test,spec}.{ts,tsx}'],
   },
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },

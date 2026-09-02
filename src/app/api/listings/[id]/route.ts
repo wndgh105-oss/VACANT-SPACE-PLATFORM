@@ -28,10 +28,10 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 
   const body = await request.json()
-  const { address, area, monthlyRent, deposit, photos, contractDurations, businessTypes, status } = body
+  const { address, area, monthlyRent, deposit, photos, contractDurations, businessTypes } = body
   const updated = await prisma.listing.update({
     where: { id: params.id },
-    data: { address, area, monthlyRent, deposit, photos, contractDurations, businessTypes, status },
+    data: { address, area, monthlyRent, deposit, photos, contractDurations, businessTypes },
   })
 
   return NextResponse.json(updated)

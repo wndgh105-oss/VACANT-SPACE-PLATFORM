@@ -1,0 +1,31 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { getToken } from 'next-auth/jwt'
+
+export async function middleware(request: NextRequest) {
+  const { pathname, search } = request.nextUrl
+  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
+
+  function redirectToLogin() {
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('callbackUrl', pathname + search)
+    return NextResponse.redirect(loginUrl)
+  }
+
+  if (!token) {
+    return redirectToLogin()
+  }
+
+  if (pathname.startsWith('/landlord') && token.role !== 'LANDLORD') {
+    return redirectToLogin()
+  }
+
+  if (pathname.startsWith('/admin') && token.role !== 'ADMIN') {
+    return redirectToLogin()
+  }
+
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: ['/tenant/my/:path*', '/landlord/:path*', '/admin/:path*'],
+}

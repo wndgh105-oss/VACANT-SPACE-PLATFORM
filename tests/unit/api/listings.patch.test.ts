@@ -60,4 +60,19 @@ describe('PATCH /api/listings/:id', () => {
     expect(call.data).not.toHaveProperty('createdAt')
     expect(call.data.monthlyRent).toBe(600000)
   })
+
+  it('does not let a landlord reopen/close a listing via status in the PATCH body', async () => {
+    vi.mocked(getServerSession).mockResolvedValue({ user: { id: 'lord1', role: 'LANDLORD' } } as never)
+    vi.mocked(prisma.listing.findUnique).mockResolvedValue({ id: 'l1', landlordId: 'lord1' } as never)
+    vi.mocked(prisma.listing.update).mockResolvedValue({ id: 'l1' } as never)
+
+    const res = await PATCH(
+      makeRequest({ monthlyRent: 600000, status: 'OPEN' }),
+      { params: { id: 'l1' } }
+    )
+
+    expect(res.status).toBe(200)
+    const call = vi.mocked(prisma.listing.update).mock.calls[0][0] as { data: Record<string, unknown> }
+    expect(call.data).not.toHaveProperty('status')
+  })
 })

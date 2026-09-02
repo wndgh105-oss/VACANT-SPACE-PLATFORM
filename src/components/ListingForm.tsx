@@ -33,13 +33,19 @@ export function ListingForm({
     contractDurations: initial?.contractDurations ?? [],
     businessTypes: initial?.businessTypes ?? [],
   })
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
   async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    setUploadError(null)
     const data = new FormData()
     data.append('file', file)
     const res = await fetch('/api/upload', { method: 'POST', body: data })
+    if (!res.ok) {
+      setUploadError('사진 업로드에 실패했습니다. 다시 시도해 주세요.')
+      return
+    }
     const { url } = await res.json()
     setForm((f) => ({ ...f, photos: [...f.photos, url] }))
   }
@@ -101,6 +107,7 @@ export function ListingForm({
       <div>
         <p className="mb-1 text-sm text-gray-500">사진</p>
         <input type="file" accept="image/*" onChange={handlePhotoUpload} />
+        {uploadError && <p className="mt-1 text-sm text-red-600">{uploadError}</p>}
         <div className="mt-2 flex gap-2">
           {form.photos.map((url) => (
             // eslint-disable-next-line @next/next/no-img-element

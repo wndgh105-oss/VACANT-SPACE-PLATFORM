@@ -7,6 +7,7 @@ import { ListingForm, ListingFormData } from '@/components/ListingForm'
 export default function EditListingPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const [initial, setInitial] = useState<ListingFormData | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetch(`/api/listings/${params.id}`)
@@ -15,11 +16,16 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
   }, [params.id])
 
   async function handleSubmit(data: ListingFormData) {
-    await fetch(`/api/listings/${params.id}`, {
+    setError(null)
+    const res = await fetch(`/api/listings/${params.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
+    if (!res.ok) {
+      setError('공실 수정에 실패했습니다. 잠시 후 다시 시도해 주세요.')
+      return
+    }
     router.push(`/landlord/listings/${params.id}`)
   }
 
@@ -28,6 +34,7 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
   return (
     <main className="mx-auto max-w-lg p-4">
       <h1 className="mb-4 text-xl font-bold">공실 수정</h1>
+      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
       <ListingForm initial={initial} onSubmit={handleSubmit} />
     </main>
   )

@@ -38,6 +38,10 @@ export default function AdminPackagesPage() {
       setError('이 업종에는 이미 패키지가 등록되어 있습니다.')
       return
     }
+    if (!res.ok) {
+      setError('패키지 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.')
+      return
+    }
     setForm({ businessType: 'CAFE', name: '', itemsText: '', monthlyFee: 0 })
     loadPackages()
   }

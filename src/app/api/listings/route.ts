@@ -32,8 +32,18 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json()
+  const { address, area, monthlyRent, deposit, photos, contractDurations, businessTypes } = body
   const listing = await prisma.listing.create({
-    data: { ...body, landlordId: session.user.id },
+    data: {
+      address,
+      area,
+      monthlyRent,
+      deposit,
+      photos,
+      contractDurations,
+      businessTypes,
+      landlordId: session.user.id,
+    },
   })
 
   return NextResponse.json(listing, { status: 201 })
