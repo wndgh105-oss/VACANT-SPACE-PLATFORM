@@ -54,7 +54,7 @@ model User {
   email        String        @unique
   passwordHash String
   name         String
-  role         Role
+  role         Role?
   phone        String?
   companyName  String?
   verified     Boolean       @default(false)

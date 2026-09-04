@@ -108,6 +108,23 @@ function LoginForm() {
           {busy ? '로그인 중…' : '로그인'}
         </button>
 
+        <div className="my-4 flex items-center gap-3">
+          <span className="h-px flex-1 bg-[var(--line)]" />
+          <span className="text-[12px] text-[var(--ink-muted)]">또는</span>
+          <span className="h-px flex-1 bg-[var(--line)]" />
+        </div>
+
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() =>
+            signIn('kakao', { callbackUrl: searchParams.get('callbackUrl') ?? '/' })
+          }
+          className="vs-btn w-full !border-none !bg-[#FEE500] !text-[#181600] hover:!bg-[#F5DC00]"
+        >
+          카카오로 시작하기
+        </button>
+
         <p className="mt-4 text-center text-[13px] text-[var(--ink-muted)]">
           계정이 없으신가요?{' '}
           <Link href="/register" className="font-semibold text-[var(--brand)] underline">

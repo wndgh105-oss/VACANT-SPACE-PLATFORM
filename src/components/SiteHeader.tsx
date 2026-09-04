@@ -73,7 +73,7 @@ export function SiteHeader() {
             <>
               <span className="hidden text-[13px] text-[var(--ink-muted)] sm:inline">
                 {session.user.name}
-                <span className="vs-badge vs-badge-brand ml-2">{roleLabel(role!)}</span>
+                {role && <span className="vs-badge vs-badge-brand ml-2">{roleLabel(role)}</span>}
               </span>
               <button
                 type="button"
