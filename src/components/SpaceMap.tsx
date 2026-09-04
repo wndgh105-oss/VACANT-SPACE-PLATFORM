@@ -15,6 +15,8 @@ export type MapPoint = {
 
 declare global {
   interface Window {
+    // 카카오맵 JS SDK는 공식 타입 정의를 제공하지 않는다.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kakao: any
   }
 }
@@ -59,7 +61,9 @@ export function SpaceMap({
   onSelect?: (id: string) => void
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapRef = useRef<any>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const overlaysRef = useRef<Map<string, any>>(new Map())
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
 
