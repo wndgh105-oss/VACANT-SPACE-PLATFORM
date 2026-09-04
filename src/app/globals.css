@@ -4,23 +4,23 @@
 
 /*
   빈자리 디자인 토큰
-  아이보리 배경 · 짙은 차콜 텍스트 · 테라코타 포인트
-  대비: ink on bg ≈ 13.8:1, white on brand ≈ 4.7:1 (WCAG AA)
+  쿨톤 화이트 배경 · 딥네이비 텍스트 · 코퍼레이트 블루 포인트
+  대비: ink on bg ≈ 13.6:1, white on brand ≈ 5.4:1 (WCAG AA)
 */
 :root {
   color-scheme: light;
 
-  --bg: #fbf8f3;
+  --bg: #f6f8fc;
   --surface: #ffffff;
-  --surface-alt: #f3ede4;
-  --ink: #241f1b;
-  --ink-muted: #6b615a;
-  --line: #e4dace;
-  --brand: #c4562b;
-  --brand-strong: #a5431f;
-  --brand-soft: #fbede5;
-  --ok: #2f7a55;
-  --ok-soft: #e7f2ec;
+  --surface-alt: #eef2f8;
+  --ink: #16233f;
+  --ink-muted: #5c6b84;
+  --line: #dce3ee;
+  --brand: #2456c6;
+  --brand-strong: #173f99;
+  --brand-soft: #e7eefc;
+  --ok: #1f7a4d;
+  --ok-soft: #e5f3ec;
   --warn: #b4761b;
   --warn-soft: #fbf1de;
   --danger: #b03a2e;
@@ -28,7 +28,7 @@
 
   --radius-card: 16px;
   --radius-btn: 12px;
-  --shadow-card: 0 1px 2px rgba(36, 31, 27, 0.06), 0 8px 24px rgba(36, 31, 27, 0.05);
+  --shadow-card: 0 1px 2px rgba(22, 35, 63, 0.06), 0 8px 24px rgba(22, 35, 63, 0.05);
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 

@@ -6,7 +6,7 @@ export function DemoBanner() {
   return (
     <div
       role="note"
-      className="bg-[var(--ink)] px-4 py-2 text-center text-[13px] leading-snug text-[#F3EDE4]"
+      className="bg-[var(--ink)] px-4 py-2 text-center text-[13px] leading-snug text-[#E7ECF5]"
     >
       <span className="font-semibold text-white">MVP 데모</span>
       <span className="mx-2 opacity-50">|</span>
