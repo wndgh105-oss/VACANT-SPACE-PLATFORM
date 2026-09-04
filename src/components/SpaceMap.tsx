@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { manWon } from '@/lib/quote'
 
 export type MapPoint = {
@@ -13,10 +13,40 @@ export type MapPoint = {
   monthlyRent: number
 }
 
+declare global {
+  interface Window {
+    kakao: any
+  }
+}
+
+const KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY
+
+let kakaoLoadPromise: Promise<void> | null = null
+
+/** 카카오맵 JS SDK를 한 번만 로드한다 (여러 지도 인스턴스가 있어도 스크립트는 하나). */
+function loadKakaoSdk(): Promise<void> {
+  if (kakaoLoadPromise) return kakaoLoadPromise
+  kakaoLoadPromise = new Promise((resolve, reject) => {
+    if (!KAKAO_KEY) {
+      reject(new Error('NEXT_PUBLIC_KAKAO_MAP_KEY 환경변수가 설정되지 않았습니다.'))
+      return
+    }
+    if (window.kakao?.maps) {
+      resolve()
+      return
+    }
+    const script = document.createElement('script')
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_KEY}&autoload=false`
+    script.async = true
+    script.onload = () => window.kakao.maps.load(() => resolve())
+    script.onerror = () => reject(new Error('카카오맵 SDK 로드에 실패했습니다.'))
+    document.head.appendChild(script)
+  })
+  return kakaoLoadPromise
+}
+
 /**
- * 외부 지도 API 키 없이 동작하는 자체 좌표 지도.
- * 위경도를 단순 선형 투영해 SVG 평면에 배치한다.
- * 실제 지도가 아니므로 도로·건물은 표현하지 않고, 상대적 위치 관계만 보여준다.
+ * 카카오맵 JS SDK 기반 지도.
  * 목록 뷰가 항상 동등하게 제공되므로 접근성상 지도는 보조 수단이다.
  */
 export function SpaceMap({
@@ -28,40 +58,90 @@ export function SpaceMap({
   selectedId?: string | null
   onSelect?: (id: string) => void
 }) {
-  const usable = useMemo(
-    () => points.filter((p): p is MapPoint & { lat: number; lng: number } => p.lat != null && p.lng != null),
-    [points]
+  const containerRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<any>(null)
+  const overlaysRef = useRef<Map<string, any>>(new Map())
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
+
+  const usable = points.filter(
+    (p): p is MapPoint & { lat: number; lng: number } => p.lat != null && p.lng != null
   )
 
-  const W = 720
-  const H = 460
-  const PAD = 60
+  // 지도 생성 (points 목록이 바뀌어도 재사용, 최초 1회)
+  useEffect(() => {
+    let cancelled = false
+    if (usable.length === 0) return
 
-  const projected = useMemo(() => {
-    if (usable.length === 0) return []
-    const lats = usable.map((p) => p.lat)
-    const lngs = usable.map((p) => p.lng)
-    const minLat = Math.min(...lats)
-    const maxLat = Math.max(...lats)
-    const minLng = Math.min(...lngs)
-    const maxLng = Math.max(...lngs)
-    const spanLat = Math.max(maxLat - minLat, 0.004)
-    const spanLng = Math.max(maxLng - minLng, 0.004)
+    loadKakaoSdk()
+      .then(() => {
+        if (cancelled || !containerRef.current) return
+        const kakao = window.kakao
+        const bounds = new kakao.maps.LatLngBounds()
+        usable.forEach((p) => bounds.extend(new kakao.maps.LatLng(p.lat, p.lng)))
 
-    return usable.map((p) => ({
-      ...p,
-      x: PAD + ((p.lng - minLng) / spanLng) * (W - PAD * 2),
-      // 위도는 위쪽이 커지므로 y축을 뒤집는다
-      y: PAD + (1 - (p.lat - minLat) / spanLat) * (H - PAD * 2),
-    }))
-  }, [usable])
+        const map = new kakao.maps.Map(containerRef.current, {
+          center: new kakao.maps.LatLng(usable[0].lat, usable[0].lng),
+          level: 6,
+        })
+        map.setBounds(bounds, 40)
+        mapRef.current = map
+        setStatus('ready')
+      })
+      .catch((err) => {
+        console.error(err)
+        if (!cancelled) setStatus('error')
+      })
 
-  const regionSummary = useMemo(() => {
-    const set = new Set(usable.map((p) => p.region).filter(Boolean) as string[])
-    return Array.from(set)
-  }, [usable])
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [usable.length])
 
-  if (projected.length === 0) {
+  // 마커(커스텀 오버레이) 렌더링 및 선택 상태 반영
+  useEffect(() => {
+    if (status !== 'ready' || !mapRef.current) return
+    const kakao = window.kakao
+    const map = mapRef.current
+
+    overlaysRef.current.forEach((ov) => ov.setMap(null))
+    overlaysRef.current.clear()
+
+    usable.forEach((p) => {
+      const active = p.id === selectedId
+      const el = document.createElement('button')
+      el.type = 'button'
+      el.setAttribute('aria-label', `${p.title ?? p.address}, 월 ${manWon(p.monthlyRent)}`)
+      el.style.cssText = [
+        'transform: translateY(-100%)',
+        'border-radius: 999px',
+        'padding: 6px 12px',
+        'font-size: 12px',
+        'font-weight: 700',
+        'font-family: inherit',
+        'white-space: nowrap',
+        'cursor: pointer',
+        'border: 2px solid ' + (active ? 'var(--brand-strong, #173F99)' : 'var(--brand, #2456C6)'),
+        'background: ' + (active ? 'var(--brand, #2456C6)' : '#ffffff'),
+        'color: ' + (active ? '#ffffff' : 'var(--brand, #2456C6)'),
+        'box-shadow: 0 2px 6px rgba(22,35,63,0.25)',
+      ].join(';')
+      el.textContent = manWon(p.monthlyRent)
+      el.onclick = () => onSelect?.(p.id)
+
+      const overlay = new kakao.maps.CustomOverlay({
+        position: new kakao.maps.LatLng(p.lat, p.lng),
+        content: el,
+        yAnchor: 1,
+        zIndex: active ? 20 : 10,
+      })
+      overlay.setMap(map)
+      overlaysRef.current.set(p.id, overlay)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, usable, selectedId])
+
+  if (usable.length === 0) {
     return (
       <div className="vs-card flex h-[300px] items-center justify-center p-6 text-center text-[14px] text-[var(--ink-muted)]">
         좌표가 등록된 공간이 없어 지도를 그릴 수 없어요. 목록 보기로 확인해 주세요.
@@ -73,91 +153,21 @@ export function SpaceMap({
     <div className="vs-card overflow-hidden">
       <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] px-4 py-2">
         <p className="text-[13px] font-semibold">지도 보기</p>
-        <p className="text-[11px] text-[var(--ink-muted)]">
-          외부 지도 API 미사용 · 좌표 상대 위치만 표시하는 예시 지도
-        </p>
+        <p className="text-[11px] text-[var(--ink-muted)]">카카오맵 · 가격 핀을 눌러 공간 정보를 확인하세요</p>
       </div>
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        className="block h-auto w-full bg-[var(--surface-alt)]"
-        role="img"
-        aria-label={`${regionSummary.join(', ')} 지역의 공간 ${projected.length}곳 위치 지도. 자세한 정보는 목록 보기에서 확인할 수 있습니다.`}
-      >
-        <defs>
-          <pattern id="vs-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M40 0 L0 0 0 40" fill="none" stroke="var(--line)" strokeWidth="1" />
-          </pattern>
-        </defs>
-        <rect width={W} height={H} fill="url(#vs-grid)" />
 
-        {/* 지역 라벨 (같은 region의 중심에 표시) */}
-        {regionSummary.map((region) => {
-          const group = projected.filter((p) => p.region === region)
-          const cx = group.reduce((s, p) => s + p.x, 0) / group.length
-          const cy = group.reduce((s, p) => s + p.y, 0) / group.length
-          return (
-            <text
-              key={region}
-              x={cx}
-              y={cy - 34}
-              textAnchor="middle"
-              fontSize="13"
-              fontWeight="700"
-              fill="var(--ink-muted)"
-              opacity="0.75"
-            >
-              {region}
-            </text>
-          )
-        })}
-
-        {projected.map((p) => {
-          const active = p.id === selectedId
-          return (
-            <g
-              key={p.id}
-              transform={`translate(${p.x}, ${p.y})`}
-              className="cursor-pointer"
-              onClick={() => onSelect?.(p.id)}
-              role="button"
-              tabIndex={0}
-              aria-label={`${p.title ?? p.address}, 월 ${manWon(p.monthlyRent)}`}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  onSelect?.(p.id)
-                }
-              }}
-            >
-              <circle
-                r={active ? 13 : 9}
-                fill={active ? 'var(--brand)' : 'var(--surface)'}
-                stroke={active ? 'var(--brand-strong)' : 'var(--brand)'}
-                strokeWidth="3"
-              />
-              <rect
-                x={-38}
-                y={active ? -44 : -40}
-                width="76"
-                height="22"
-                rx="11"
-                fill="var(--ink)"
-                opacity={active ? 0.95 : 0.75}
-              />
-              <text
-                x="0"
-                y={active ? -29 : -25}
-                textAnchor="middle"
-                fontSize="11"
-                fontWeight="700"
-                fill="#fff"
-              >
-                {manWon(p.monthlyRent)}
-              </text>
-            </g>
-          )
-        })}
-      </svg>
+      {status === 'error' ? (
+        <div className="flex h-[400px] items-center justify-center bg-[var(--surface-alt)] p-6 text-center text-[14px] text-[var(--ink-muted)]">
+          지도를 불러오지 못했어요. 목록 보기로 확인해 주세요.
+        </div>
+      ) : (
+        <div
+          ref={containerRef}
+          role="img"
+          aria-label={`공간 ${usable.length}곳의 위치를 보여주는 지도. 자세한 정보는 목록 보기에서 확인할 수 있습니다.`}
+          className="h-[400px] w-full bg-[var(--surface-alt)]"
+        />
+      )}
     </div>
   )
 }
