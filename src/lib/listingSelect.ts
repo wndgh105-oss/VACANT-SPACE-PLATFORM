@@ -1,0 +1,23 @@
+/** 목록·카드에 필요한 Listing 필드 (route 파일은 핸들러만 export할 수 있어 여기에 둔다) */
+export const listingCardSelect = {
+  id: true,
+  title: true,
+  address: true,
+  region: true,
+  lat: true,
+  lng: true,
+  area: true,
+  monthlyRent: true,
+  deposit: true,
+  maintenanceFee: true,
+  businessTypes: true,
+  recommendedTypes: true,
+  contractDurations: true,
+  parking: true,
+  hasGas: true,
+  hasDrain: true,
+  powerKw: true,
+  immediateMoveIn: true,
+  status: true,
+  photos: true,
+} as const

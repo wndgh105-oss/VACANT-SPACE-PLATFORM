@@ -29,13 +29,24 @@ export default function EditListingPage({ params }: { params: { id: string } }) 
     router.push(`/landlord/listings/${params.id}`)
   }
 
-  if (!initial) return <p className="p-4">불러오는 중...</p>
-
   return (
-    <main className="mx-auto max-w-lg p-4">
-      <h1 className="mb-4 text-xl font-bold">공실 수정</h1>
-      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
-      <ListingForm initial={initial} onSubmit={handleSubmit} />
-    </main>
+    <div className="vs-container max-w-2xl py-8">
+      <h1 className="text-[26px] font-bold tracking-tight">공실 수정</h1>
+      {error && (
+        <p role="alert" className="mb-4 mt-4 text-[13px] text-[var(--danger)]">
+          {error}
+        </p>
+      )}
+      {!initial ? (
+        <div className="mt-6 space-y-3">
+          <div className="vs-skeleton h-40 w-full" />
+          <div className="vs-skeleton h-40 w-full" />
+        </div>
+      ) : (
+        <div className="mt-6">
+          <ListingForm initial={initial} onSubmit={handleSubmit} />
+        </div>
+      )}
+    </div>
   )
 }

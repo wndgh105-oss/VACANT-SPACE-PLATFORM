@@ -40,12 +40,12 @@ describe('AdminApplicationsPage', () => {
 
     render(<AdminApplicationsPage />)
 
-    const select = await screen.findByDisplayValue('대기중')
-    await userEvent.selectOptions(select, '연락중')
+    const select = await screen.findByDisplayValue('요청 접수')
+    await userEvent.selectOptions(select, '상담 중')
 
     await waitFor(() => expect(alertSpy).toHaveBeenCalled())
     // Status select should still reflect the original (unpersisted) status.
-    expect(screen.getByDisplayValue('대기중')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('요청 접수')).toBeInTheDocument()
   })
 
   it('updates the displayed status when the PATCH request succeeds', async () => {
@@ -60,10 +60,10 @@ describe('AdminApplicationsPage', () => {
 
     render(<AdminApplicationsPage />)
 
-    const select = await screen.findByDisplayValue('대기중')
-    await userEvent.selectOptions(select, '연락중')
+    const select = await screen.findByDisplayValue('요청 접수')
+    await userEvent.selectOptions(select, '상담 중')
 
-    await waitFor(() => expect(screen.getByDisplayValue('연락중')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByDisplayValue('상담 중')).toBeInTheDocument())
     expect(alertSpy).not.toHaveBeenCalled()
   })
 })

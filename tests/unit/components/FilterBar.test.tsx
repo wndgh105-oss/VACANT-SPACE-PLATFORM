@@ -7,7 +7,7 @@ describe('FilterBar', () => {
   it('calls onChange with the selected business type', async () => {
     const onChange = vi.fn()
     render(<FilterBar value={{}} onChange={onChange} />)
-    await userEvent.click(screen.getByRole('button', { name: '카페' }))
+    await userEvent.click(screen.getByRole('button', { name: '카페·디저트' }))
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ businessType: 'CAFE' }))
   })
 })

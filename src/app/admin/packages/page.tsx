@@ -6,7 +6,7 @@ import { businessTypeLabel } from '@/lib/labels'
 
 type Package = { id: string; businessType: BusinessType; name: string; items: string[]; monthlyFee: number }
 
-const ALL_BUSINESS_TYPES: BusinessType[] = ['CAFE', 'RETAIL', 'OTHER']
+const ALL_BUSINESS_TYPES: BusinessType[] = ['CAFE', 'RETAIL', 'OFFICE', 'STUDY', 'OTHER']
 
 export default function AdminPackagesPage() {
   const [packages, setPackages] = useState<Package[]>([])

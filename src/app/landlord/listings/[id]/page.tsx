@@ -7,7 +7,12 @@ import { StatusBadge } from '@/components/StatusBadge'
 import { summarizeRecentApplications } from '@/lib/applicationSummary'
 
 type Application = { id: string; applicantName: string; status: ApplicationStatus; createdAt: string }
-type ListingDetail = { id: string; address: string; monthlyRent: number; status: 'OPEN' | 'CLOSED' }
+type ListingDetail = {
+  id: string
+  address: string
+  monthlyRent: number
+  status: 'PENDING_REVIEW' | 'OPEN' | 'CLOSED'
+}
 
 export default function LandlordListingDetailPage({ params }: { params: { id: string } }) {
   const [listing, setListing] = useState<ListingDetail | null>(null)

@@ -11,14 +11,16 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json()
-  const { listingId, applicantName, phone, desiredDuration, desiredStartDate, message } = body as {
-    listingId: string
-    applicantName: string
-    phone: string
-    desiredDuration: number
-    desiredStartDate: string
-    message?: string
-  }
+  const { listingId, applicantName, phone, desiredDuration, desiredStartDate, message, quoteId } =
+    body as {
+      listingId: string
+      applicantName: string
+      phone: string
+      desiredDuration: number
+      desiredStartDate: string
+      message?: string
+      quoteId?: string
+    }
 
   const existing = await prisma.application.findFirst({
     where: { listingId, tenantId: session.user.id },
@@ -36,6 +38,7 @@ export async function POST(request: Request) {
       desiredDuration,
       desiredStartDate: new Date(desiredStartDate),
       message,
+      quoteId: quoteId ?? null,
     },
   })
 

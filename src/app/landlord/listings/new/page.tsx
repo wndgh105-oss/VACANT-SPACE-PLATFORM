@@ -24,10 +24,18 @@ export default function NewListingPage() {
   }
 
   return (
-    <main className="mx-auto max-w-lg p-4">
-      <h1 className="mb-4 text-xl font-bold">공실 등록</h1>
-      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+    <div className="vs-container max-w-2xl py-8">
+      <h1 className="text-[26px] font-bold tracking-tight">공실 등록</h1>
+      <p className="mb-6 mt-2 text-[14px] leading-relaxed text-[var(--ink-muted)]">
+        등록 후 바로 노출되지 않고, <strong className="text-[var(--ink)]">운영자 현장 실사 승인 후</strong>{' '}
+        검색 결과에 나타납니다. 실사 진행 상황은 이 대시보드에서 확인할 수 있습니다.
+      </p>
+      {error && (
+        <p role="alert" className="mb-4 text-[13px] text-[var(--danger)]">
+          {error}
+        </p>
+      )}
       <ListingForm onSubmit={handleSubmit} />
-    </main>
+    </div>
   )
 }

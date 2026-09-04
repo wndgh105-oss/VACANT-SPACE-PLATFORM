@@ -12,7 +12,9 @@ export async function POST(request: Request) {
     role?: Role
   }
 
-  if (!email || !password || !name || (role !== 'TENANT' && role !== 'LANDLORD')) {
+  // 운영자(ADMIN)는 공개 가입 대상이 아니다.
+  const SELF_SIGNUP_ROLES: Role[] = ['TENANT', 'LANDLORD', 'PARTNER']
+  if (!email || !password || !name || !role || !SELF_SIGNUP_ROLES.includes(role)) {
     return NextResponse.json({ error: 'invalid input' }, { status: 400 })
   }
 

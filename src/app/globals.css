@@ -2,26 +2,254 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  빈자리 디자인 토큰
+  아이보리 배경 · 짙은 차콜 텍스트 · 테라코타 포인트
+  대비: ink on bg ≈ 13.8:1, white on brand ≈ 4.7:1 (WCAG AA)
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  --bg: #fbf8f3;
+  --surface: #ffffff;
+  --surface-alt: #f3ede4;
+  --ink: #241f1b;
+  --ink-muted: #6b615a;
+  --line: #e4dace;
+  --brand: #c4562b;
+  --brand-strong: #a5431f;
+  --brand-soft: #fbede5;
+  --ok: #2f7a55;
+  --ok-soft: #e7f2ec;
+  --warn: #b4761b;
+  --warn-soft: #fbf1de;
+  --danger: #b03a2e;
+  --danger-soft: #fbeae8;
+
+  --radius-card: 16px;
+  --radius-btn: 12px;
+  --shadow-card: 0 1px 2px rgba(36, 31, 27, 0.06), 0 8px 24px rgba(36, 31, 27, 0.05);
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  padding: 0;
+  margin: 0;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Pretendard, system-ui, -apple-system, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo",
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 포커스 링은 절대 제거하지 않는다 */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@layer components {
+  .vs-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .vs-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 18px;
+    border-radius: var(--radius-btn);
+    font-weight: 600;
+    font-size: 15px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 160ms var(--ease), border-color 160ms var(--ease),
+      transform 160ms var(--ease);
+  }
+  .vs-btn:active {
+    transform: translateY(1px);
+  }
+  .vs-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .vs-btn-primary {
+    background: var(--brand);
+    color: #fff;
+  }
+  .vs-btn-primary:hover:not(:disabled) {
+    background: var(--brand-strong);
+  }
+
+  .vs-btn-secondary {
+    background: var(--surface);
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  .vs-btn-secondary:hover:not(:disabled) {
+    background: var(--surface-alt);
+  }
+
+  .vs-btn-ghost {
+    background: transparent;
+    color: var(--ink-muted);
+  }
+  .vs-btn-ghost:hover:not(:disabled) {
+    background: var(--surface-alt);
+    color: var(--ink);
+  }
+
+  .vs-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    background: var(--surface-alt);
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+  .vs-badge-brand {
+    background: var(--brand-soft);
+    color: var(--brand-strong);
+  }
+  .vs-badge-ok {
+    background: var(--ok-soft);
+    color: var(--ok);
+  }
+  .vs-badge-warn {
+    background: var(--warn-soft);
+    color: var(--warn);
+  }
+  .vs-badge-danger {
+    background: var(--danger-soft);
+    color: var(--danger);
+  }
+
+  .vs-input,
+  .vs-select,
+  .vs-textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 15px;
+    font-family: inherit;
+  }
+  .vs-input::placeholder,
+  .vs-textarea::placeholder {
+    color: #a79c92;
+  }
+  .vs-input:hover,
+  .vs-select:hover,
+  .vs-textarea:hover {
+    border-color: #d3c5b3;
+  }
+
+  .vs-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+
+  .vs-section-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .vs-muted {
+    color: var(--ink-muted);
+  }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .vs-container {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .vs-rise {
+    animation: vs-rise 320ms var(--ease) both;
+  }
+  .vs-fade {
+    animation: vs-fade 260ms var(--ease) both;
+  }
+}
+
+@keyframes vs-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vs-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes vs-shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+.vs-skeleton {
+  background: linear-gradient(90deg, var(--surface-alt) 25%, #ece4d8 37%, var(--surface-alt) 63%);
+  background-size: 200% 100%;
+  animation: vs-shimmer 1.4s linear infinite;
+  border-radius: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }

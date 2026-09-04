@@ -16,6 +16,6 @@ describe('ListingCard', () => {
     render(<ListingCard listing={listing} />)
     expect(screen.getByText('서울시 마포구 연남동')).toBeInTheDocument()
     expect(screen.getByText('월 800,000원')).toBeInTheDocument()
-    expect(screen.getByText('카페')).toBeInTheDocument()
+    expect(screen.getByText('카페·디저트')).toBeInTheDocument()
   })
 })

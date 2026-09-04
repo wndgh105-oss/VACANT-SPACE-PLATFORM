@@ -9,7 +9,7 @@ describe('RecommendWidget', () => {
     render(<RecommendWidget onComplete={onComplete} onSkip={vi.fn()} />)
 
     await userEvent.click(screen.getByRole('button', { name: '~500,000원' }))
-    await userEvent.click(screen.getByRole('button', { name: '카페' }))
+    await userEvent.click(screen.getByRole('button', { name: '카페·디저트' }))
     await userEvent.click(screen.getByRole('button', { name: '즉시' }))
 
     expect(onComplete).toHaveBeenCalledWith({ maxPrice: 500000, businessType: 'CAFE' })

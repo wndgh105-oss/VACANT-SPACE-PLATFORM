@@ -28,10 +28,54 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 
   const body = await request.json()
-  const { address, area, monthlyRent, deposit, photos, contractDurations, businessTypes } = body
+  const {
+    title,
+    address,
+    region,
+    lat,
+    lng,
+    area,
+    monthlyRent,
+    deposit,
+    maintenanceFee,
+    photos,
+    contractDurations,
+    businessTypes,
+    recommendedTypes,
+    parking,
+    powerKw,
+    hasGas,
+    hasDrain,
+    immediateMoveIn,
+    areaSummary,
+    description,
+  } = body
+
+  // status·landlordId 등은 이 화이트리스트에 없으므로 클라이언트가 아무리 보내도 무시된다.
   const updated = await prisma.listing.update({
     where: { id: params.id },
-    data: { address, area, monthlyRent, deposit, photos, contractDurations, businessTypes },
+    data: {
+      title,
+      address,
+      region,
+      lat,
+      lng,
+      area,
+      monthlyRent,
+      deposit,
+      maintenanceFee,
+      photos,
+      contractDurations,
+      businessTypes,
+      recommendedTypes,
+      parking,
+      powerKw,
+      hasGas,
+      hasDrain,
+      immediateMoveIn,
+      areaSummary,
+      description,
+    },
   })
 
   return NextResponse.json(updated)
