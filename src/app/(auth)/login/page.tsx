@@ -158,9 +158,6 @@ function LoginForm() {
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-[11px] leading-relaxed text-[var(--ink-muted)]">
-          데모 데이터이며 실제 개인정보가 아닙니다. 프로덕션 배포 시 이 안내 블록은 제거해야 합니다.
-        </p>
       </aside>
     </div>
   )
