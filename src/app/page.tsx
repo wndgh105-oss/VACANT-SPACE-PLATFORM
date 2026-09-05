@@ -53,14 +53,12 @@ export default async function LandingPage() {
           <div className="max-w-2xl">
             <span className="vs-badge vs-badge-brand">단기 임대형 공실 완화 · 모듈형 창업 렌탈</span>
             <h1 className="vs-rise mt-4 text-[34px] font-bold leading-[1.25] tracking-tight md:text-[46px]">
-              1억을 걸기 전에,
+              일단, 두 달만 해볼까요?
               <br />
-              <span className="text-[var(--brand)]">두 달만 장사해 보세요.</span>
+              <span className="text-[var(--brand)]">안 맞으면 사이즈 바꾸면 되니까요.</span>
             </h1>
             <p className="vs-rise mt-4 text-[16px] leading-relaxed text-[var(--ink-muted)] md:text-[18px]">
-              비어 있는 상가를 2개월 단위로 빌리고, 필요한 장비를 패키지로 함께 대여합니다.
-              <br className="hidden sm:block" />
-              실패하면 반납하고 끝냅니다. 잘되면 연장하거나 더 좋은 자리로 옮깁니다.
+              보증금도 권리금도 없이 가볍게 시작하는 창업.
             </p>
           </div>
 

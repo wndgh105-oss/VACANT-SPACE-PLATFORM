@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { signOut, useSession } from 'next-auth/react'
@@ -49,8 +50,10 @@ export function SiteHeader() {
         <Link href="/" className="flex items-center gap-2 font-bold tracking-tight">
           <span
             aria-hidden
-            className="inline-block h-5 w-5 rounded-[6px] bg-[var(--brand)]"
-          />
+            className="inline-flex h-7 w-7 items-center justify-center rounded-[8px] bg-[var(--brand-soft)]"
+          >
+            <Image src="/logo-icon.png" alt="" width={20} height={20} className="h-4 w-4 object-contain" />
+          </span>
           <span className="text-[17px]">빈자리</span>
         </Link>
 
