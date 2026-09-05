@@ -129,7 +129,7 @@ export default async function LandingPage() {
       <section className="border-y border-[var(--line)] bg-[var(--surface-alt)]" aria-labelledby="how-heading">
         <div className="vs-container py-14">
           <h2 id="how-heading" className="text-[26px] font-bold tracking-tight">
-            어떻게 하나요
+            네 단계면 충분해요!
           </h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {STEPS.map((s, i) => (
@@ -150,7 +150,7 @@ export default async function LandingPage() {
       {/* 장비 패키지 */}
       <section className="vs-container py-14" aria-labelledby="pkg-heading">
         <h2 id="pkg-heading" className="text-[26px] font-bold tracking-tight">
-          업종별 모듈형 장비 패키지
+          장비도, 필요한 만큼만
         </h2>
         <p className="mt-2 text-[15px] text-[var(--ink-muted)]">
           필요 없는 품목은 빼고, 필요한 것만 월 단위로 빌립니다.
