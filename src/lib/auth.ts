@@ -21,7 +21,13 @@ export async function authorizeCredentials(email: string, password: string) {
  */
 async function findOrCreateKakaoUser(kakaoId: string, email: string | null, name: string) {
   const byKakaoId = await prisma.user.findUnique({ where: { kakaoId } })
-  if (byKakaoId) return byKakaoId
+  if (byKakaoId) {
+    // 이메일 없이(심사 대기 중) 만들어진 계정이 이후 로그인에서 이메일을 받아오면 채워 넣는다.
+    if (email && !byKakaoId.email) {
+      return prisma.user.update({ where: { id: byKakaoId.id }, data: { email } })
+    }
+    return byKakaoId
+  }
 
   if (email) {
     const byEmail = await prisma.user.findUnique({ where: { email } })
