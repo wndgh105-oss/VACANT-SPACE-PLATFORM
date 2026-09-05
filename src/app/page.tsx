@@ -52,7 +52,7 @@ export default async function LandingPage() {
         <div className="vs-container py-14 md:py-20">
           <div className="max-w-2xl">
             <span className="vs-badge vs-badge-brand">단기 임대형 공실 완화 · 모듈형 창업 렌탈</span>
-            <h1 className="vs-rise mt-4 text-[34px] font-bold leading-[1.25] tracking-tight md:text-[46px]">
+            <h1 className="vs-rise mt-4 text-[26px] font-bold leading-[1.25] tracking-tight md:text-[36px]">
               일단, 두 달만 해볼까요?
               <br />
               <span className="text-[var(--brand)]">안 맞으면 사이즈 바꾸면 되니까요!</span>
