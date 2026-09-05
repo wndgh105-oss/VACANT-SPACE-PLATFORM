@@ -61,9 +61,8 @@ export const authOptions: NextAuthOptions = {
     KakaoProvider({
       clientId: process.env.KAKAO_CLIENT_ID ?? '',
       clientSecret: process.env.KAKAO_CLIENT_SECRET ?? '',
-      // account_email은 카카오 콘솔에서 "권한 없음" 상태라 심사(비즈니스 채널 연동) 통과 전까지는
-      // scope에 넣으면 KOE006으로 거부된다. 심사 통과 후 'profile_nickname account_email'로 되돌릴 것.
-      authorization: { params: { scope: 'profile_nickname' } },
+      // account_email은 개인 개발자 비즈 앱 전환 후 필수 동의로 설정 완료 (2026-09-05).
+      authorization: { params: { scope: 'profile_nickname account_email' } },
     }),
   ],
   callbacks: {
