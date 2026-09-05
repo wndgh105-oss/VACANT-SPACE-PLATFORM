@@ -55,9 +55,9 @@ export default async function LandingPage() {
             <h1 className="vs-rise mt-4 text-[34px] font-bold leading-[1.25] tracking-tight md:text-[46px]">
               일단, 두 달만 해볼까요?
               <br />
-              <span className="text-[var(--brand)]">안 맞으면 사이즈 바꾸면 되니까요.</span>
+              <span className="text-[var(--brand)]">안 맞으면 사이즈 바꾸면 되니까요!</span>
             </h1>
-            <p className="vs-rise mt-4 text-[16px] leading-relaxed text-[var(--ink-muted)] md:text-[18px]">
+            <p className="vs-rise mt-4 text-[14px] leading-relaxed text-[var(--ink-muted)] md:text-[15px]">
               보증금도 권리금도 없이 가볍게 시작하는 창업.
             </p>
           </div>
