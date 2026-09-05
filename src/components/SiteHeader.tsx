@@ -50,9 +50,9 @@ export function SiteHeader() {
         <Link href="/" className="flex items-center gap-2 font-bold tracking-tight">
           <span
             aria-hidden
-            className="inline-flex h-7 w-7 items-center justify-center rounded-[8px] bg-[var(--brand-soft)]"
+            className="inline-flex h-9 items-center justify-center rounded-[8px] bg-[var(--brand-soft)] px-1.5"
           >
-            <Image src="/logo-icon.png" alt="" width={20} height={20} className="h-4 w-4 object-contain" />
+            <Image src="/logo-icon.png" alt="" width={127} height={97} className="h-6 w-auto object-contain" />
           </span>
           <span className="text-[17px]">빈자리</span>
         </Link>
