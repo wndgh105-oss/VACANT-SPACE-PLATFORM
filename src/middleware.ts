@@ -15,9 +15,8 @@ export async function middleware(request: NextRequest) {
     return redirectToLogin()
   }
 
-  // 카카오 등 소셜 로그인으로 막 생긴 계정은 역할(과, 이메일 동의가 아직 없다면 이메일)을
-  // 고르기 전까지 다른 곳에 못 들어간다.
-  if ((!token.role || !token.email) && pathname !== '/onboarding/role') {
+  // 카카오 등 소셜 로그인으로 막 생긴 계정은 역할을 고르기 전까지 다른 곳에 못 들어간다.
+  if (!token.role && pathname !== '/onboarding/role') {
     const url = new URL('/onboarding/role', request.url)
     url.searchParams.set('callbackUrl', pathname + search)
     return NextResponse.redirect(url)

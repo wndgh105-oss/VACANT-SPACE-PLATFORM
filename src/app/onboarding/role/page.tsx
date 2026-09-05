@@ -23,12 +23,8 @@ function RoleOnboardingForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [role, setRole] = useState<(typeof ROLES)[number]['value']>('TENANT')
-  const [email, setEmail] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  // 카카오 이메일 동의가 심사 대기 중인 계정은 세션에 이메일이 없다 — 이 화면에서 받는다.
-  const needsEmail = session !== undefined && !session?.user.email
 
   async function submit() {
     setBusy(true)
@@ -37,17 +33,10 @@ function RoleOnboardingForm() {
       const res = await fetch('/api/auth/set-role', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(needsEmail ? { role, email } : { role }),
+        body: JSON.stringify({ role }),
       })
-      if (!res.ok) {
-        const body = (await res.json().catch(() => ({}))) as { error?: string }
-        const messages: Record<string, string> = {
-          invalid_email: '올바른 이메일 주소를 입력해 주세요.',
-          email_taken: '이미 사용 중인 이메일입니다.',
-        }
-        throw new Error(messages[body.error ?? ''] ?? '저장하지 못했습니다. 잠시 후 다시 시도해 주세요.')
-      }
-      await update() // 세션의 role·email을 새로 반영
+      if (!res.ok) throw new Error('저장하지 못했습니다. 잠시 후 다시 시도해 주세요.')
+      await update() // 세션의 role을 새로 반영
       const dest =
         searchParams.get('callbackUrl') ??
         { TENANT: '/dashboard', LANDLORD: '/landlord', PARTNER: '/partner' }[role]
@@ -67,28 +56,6 @@ function RoleOnboardingForm() {
           {session?.user.name}님, 어떤 목적으로 빈자리를 쓰실 건가요? 나중에 바꿀 수는 없으니 신중하게
           골라주세요.
         </p>
-
-        {needsEmail && (
-          <div className="mt-6">
-            <label className="vs-label" htmlFor="onboarding-email">
-              이메일
-            </label>
-            <input
-              id="onboarding-email"
-              className="vs-input"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-            />
-            <p className="mt-1 text-[12px] text-[var(--ink-muted)]">
-              카카오 계정 이메일 동의가 아직 열려 있지 않아, 로그인·알림에 쓸 이메일을 직접 입력받고
-              있어요.
-            </p>
-          </div>
-        )}
 
         <fieldset className="mt-6">
           <legend className="sr-only">역할 선택</legend>
@@ -118,12 +85,7 @@ function RoleOnboardingForm() {
           </p>
         )}
 
-        <button
-          type="button"
-          className="vs-btn vs-btn-primary mt-5 w-full"
-          onClick={submit}
-          disabled={busy || (needsEmail && !email.trim())}
-        >
+        <button type="button" className="vs-btn vs-btn-primary mt-5 w-full" onClick={submit} disabled={busy}>
           {busy ? '저장 중…' : '시작하기'}
         </button>
       </div>
