@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { Prisma } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { notify } from '@/lib/notify'
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions)
@@ -40,7 +41,15 @@ export async function POST(request: Request) {
       message,
       quoteId: quoteId ?? null,
     },
+    include: { listing: true },
   })
+
+  await notify(
+    application.listing.landlordId,
+    '새 상담 요청이 도착했어요',
+    `${applicantName}님이 "${application.listing.title ?? application.listing.address}"에 상담을 요청했습니다.`,
+    '/landlord'
+  )
 
   return NextResponse.json(application, { status: 201 })
 }

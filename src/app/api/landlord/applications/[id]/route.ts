@@ -4,6 +4,8 @@ import { ApplicationStatus } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { computeListingStatusUpdate } from '@/lib/applicationStatusTransition'
+import { notify } from '@/lib/notify'
+import { applicationStatusLabel } from '@/lib/labels'
 
 /**
  * 건물주(또는 운영자)가 자기 공실에 들어온 요청의 상태를 바꾼다.
@@ -71,5 +73,15 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   ]
 
   const [updated] = await prisma.$transaction(operations)
+
+  if (current.status !== status) {
+    await notify(
+      current.tenantId,
+      '신청 상태가 바뀌었어요',
+      `"${current.listing.title ?? current.listing.address}" 상담 요청이 "${applicationStatusLabel(status)}" 상태로 바뀌었습니다.`,
+      '/dashboard/applications'
+    )
+  }
+
   return NextResponse.json(updated)
 }

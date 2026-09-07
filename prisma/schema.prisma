@@ -70,6 +70,21 @@ model User {
   quotes       Quote[]       @relation("TenantQuotes")
   reviews      Review[]      @relation("AuthorReviews")
   reports      Report[]      @relation("ReporterReports")
+  notifications Notification[]
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  body      String
+  // 클릭 시 이동할 경로. 없으면 클릭해도 이동하지 않는다.
+  href      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
 }
 
 model Listing {

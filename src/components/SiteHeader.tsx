@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { signOut, useSession } from 'next-auth/react'
 import { roleLabel } from '@/lib/labels'
+import { NotificationsBell } from '@/components/NotificationsBell'
 
 type NavLink = { href: string; label: string }
 
@@ -74,6 +75,7 @@ export function SiteHeader() {
             <div className="vs-skeleton h-8 w-24" aria-hidden />
           ) : session ? (
             <>
+              <NotificationsBell />
               <span className="hidden text-[13px] text-[var(--ink-muted)] sm:inline">
                 {session.user.name}
                 {role && <span className="vs-badge vs-badge-brand ml-2">{roleLabel(role)}</span>}

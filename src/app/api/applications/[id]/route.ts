@@ -3,6 +3,8 @@ import { requireAdmin } from '@/lib/requireAdmin'
 import { prisma } from '@/lib/prisma'
 import { computeListingStatusUpdate } from '@/lib/applicationStatusTransition'
 import { ApplicationStatus } from '@prisma/client'
+import { notify } from '@/lib/notify'
+import { applicationStatusLabel } from '@/lib/labels'
 
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
   const guard = await requireAdmin()
@@ -10,7 +12,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   const { status } = (await request.json()) as { status: ApplicationStatus }
 
-  const current = await prisma.application.findUnique({ where: { id: params.id } })
+  const current = await prisma.application.findUnique({ where: { id: params.id }, include: { listing: true } })
   if (!current) {
     return NextResponse.json({ error: 'not found' }, { status: 404 })
   }
@@ -23,6 +25,15 @@ export async function PATCH(request: Request, { params }: { params: { id: string
       : []),
   ]
   const [updated] = await prisma.$transaction(operations)
+
+  if (current.status !== status) {
+    await notify(
+      current.tenantId,
+      '신청 상태가 바뀌었어요',
+      `"${current.listing.title ?? current.listing.address}" 상담 요청이 "${applicationStatusLabel(status)}" 상태로 바뀌었습니다.`,
+      '/dashboard/applications'
+    )
+  }
 
   return NextResponse.json(updated)
 }
