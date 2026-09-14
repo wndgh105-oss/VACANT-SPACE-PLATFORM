@@ -93,7 +93,7 @@ export function SiteHeader() {
               <Link href="/login" className="vs-btn vs-btn-ghost !px-3 !py-2 !text-[14px]">
                 로그인
               </Link>
-              <Link href="/register" className="vs-btn vs-btn-primary !px-3 !py-2 !text-[14px]">
+              <Link href="/register" className="vs-btn vs-btn-accent !px-3 !py-2 !text-[14px]">
                 시작하기
               </Link>
             </>

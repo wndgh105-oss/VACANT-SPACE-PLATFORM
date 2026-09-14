@@ -52,10 +52,10 @@ export default async function LandingPage() {
         <div className="vs-container py-14 md:py-20">
           <div className="max-w-2xl">
             <span className="vs-badge vs-badge-brand">단기 임대형 공실 완화 · 모듈형 창업 렌탈</span>
-            <h1 className="vs-rise mt-4 text-[26px] font-bold leading-[1.25] tracking-tight md:text-[36px]">
+            <h1 className="vs-rise mt-4 break-keep text-[22px] font-bold leading-[1.32] tracking-tight md:text-[36px] md:leading-[1.25]">
               일단, 두 달만 해볼까요?
               <br />
-              <span className="text-[var(--brand)]">안 맞으면 사이즈 바꾸면 되니까요!</span>
+              <span className="text-[var(--accent)]">안 맞으면 사이즈 바꾸면 되니까요!</span>
             </h1>
             <p className="vs-rise mt-4 text-[14px] leading-relaxed text-[var(--ink-muted)] md:text-[15px]">
               보증금도 권리금도 없이 가볍게 시작하는 창업.
@@ -70,6 +70,24 @@ export default async function LandingPage() {
             <span>· 무권리 매물만 취급</span>
             <span>· 보증금 최소화</span>
             <span>· 총비용 선공개</span>
+          </div>
+
+          <div className="vs-rise mt-8 max-w-3xl overflow-hidden rounded-[16px]">
+            <div
+              className="relative aspect-[21/9] w-full sm:aspect-[3/1]"
+              style={{
+                background: 'linear-gradient(135deg, #ffd9c8 0%, #ffb199 45%, #ff8b6b 100%)',
+              }}
+              role="img"
+              aria-label="예시 이미지 — 성수동 12평 카페 자리 (실제 사진 아님)"
+            >
+              <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold text-[var(--ink)]">
+                예시 이미지
+              </span>
+              <span className="absolute bottom-3 left-3 text-[13px] font-bold text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.35)]">
+                성수동 · 12평 카페 자리
+              </span>
+            </div>
           </div>
         </div>
       </section>
@@ -105,9 +123,9 @@ export default async function LandingPage() {
             </p>
           </div>
 
-          <div className="vs-card border-[var(--brand)] p-6">
-            <p className="text-[13px] font-semibold text-[var(--brand)]">빈자리 · 2개월 시험 운영</p>
-            <p className="mt-1 text-[34px] font-bold leading-tight text-[var(--brand)]">
+          <div className="vs-card border-[var(--accent)] p-6">
+            <p className="text-[13px] font-semibold text-[var(--accent-strong)]">빈자리 · 2개월 시험 운영</p>
+            <p className="mt-1 text-[34px] font-bold leading-tight text-[var(--accent-strong)]">
               {manWon(6_280_000)}
             </p>
             <ul className="mt-4 space-y-2 text-[14px] text-[var(--ink-muted)]">

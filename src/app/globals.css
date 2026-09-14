@@ -19,6 +19,10 @@
   --brand: #2456c6;
   --brand-strong: #173f99;
   --brand-soft: #e7eefc;
+  /* 행동 유도 지점(CTA, 절감액 강조)에만 쓰는 보조 포인트 컬러 — 구조·정보는 계속 --brand를 쓴다 */
+  --accent: #ff6a4d;
+  --accent-strong: #e2502f;
+  --accent-soft: #ffe6e0;
   --ok: #1f7a4d;
   --ok-soft: #e5f3ec;
   --warn: #b4761b;
@@ -109,6 +113,16 @@ a {
   }
   .vs-btn-secondary:hover:not(:disabled) {
     background: var(--surface-alt);
+  }
+
+  /* 행동 유도 지점 전용. vs-btn-primary(네이비 계열)를 대체하는 게 아니라
+     헤더 CTA·랜딩 히어로처럼 톤을 의도적으로 바꾸고 싶은 자리에만 선택적으로 쓴다. */
+  .vs-btn-accent {
+    background: var(--accent);
+    color: #fff;
+  }
+  .vs-btn-accent:hover:not(:disabled) {
+    background: var(--accent-strong);
   }
 
   .vs-btn-ghost {

@@ -1,0 +1,399 @@
+<!doctype html>
+<title>빈자리 리디자인 제안</title>
+<style>
+  :root {
+    --bg: #f0f2f6;
+    --panel: #ffffff;
+    --ink: #16233f;
+    --ink-muted: #5c6b84;
+    --line: #dce3ee;
+
+    /* AS-IS 토큰 (현재 사이트 그대로) */
+    --asis-brand: #2456c6;
+    --asis-brand-strong: #173f99;
+    --asis-brand-soft: #e7eefc;
+    --asis-danger: #b03a2e;
+    --asis-danger-soft: #fbeae8;
+    --asis-ok: #1f7a4d;
+    --asis-ok-soft: #e5f3ec;
+    --asis-warn: #b4761b;
+    --asis-warn-soft: #fbf1de;
+    --asis-bar: #16233f;
+
+    /* 제안 토큰 */
+    --new-navy: #1c2c4d;
+    --new-brand: #2456c6;
+    --new-accent: #ff6a4d;
+    --new-accent-strong: #e2502f;
+    --new-accent-soft: #ffe6e0;
+    --new-ok: #1f7a4d;
+    --new-ok-soft: #e5f3ec;
+    --new-bar-bg: #eef1f7;
+    --new-bar-ink: #4a5570;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 40px 20px 80px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Pretendard, "Malgun Gothic", "Apple SD Gothic Neo", system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+
+  .page-head {
+    max-width: 1080px;
+    margin: 0 auto 32px;
+  }
+  .page-head .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 12px;
+  }
+  .page-head h1 {
+    margin: 14px 0 6px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .page-head p {
+    margin: 0;
+    max-width: 640px;
+    font-size: 14px;
+    color: var(--ink-muted);
+  }
+
+  .compare {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  @media (min-width: 860px) {
+    .compare { grid-template-columns: 1fr 1fr; }
+  }
+
+  .col-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .col-label .tag {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .col-label.is-asis .tag { background: #e9ecf2; color: #5c6b84; }
+  .col-label.is-new .tag { background: var(--new-accent-soft); color: var(--new-accent-strong); }
+  .col-label strong { font-size: 14px; }
+
+  .frame {
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    background: var(--panel);
+    border-radius: 22px;
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 30px rgba(22, 35, 63, 0.08);
+    overflow: hidden;
+  }
+
+  /* ── AS-IS ─────────────────────────────── */
+  .asis-banner {
+    background: var(--asis-bar);
+    color: #e7ecf5;
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 10px 14px;
+    text-align: center;
+  }
+  .asis-banner b { color: #fff; font-weight: 700; }
+
+  .asis-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .brandmark { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px; }
+  .brandmark .dot { width: 16px; height: 16px; border-radius: 5px; background: var(--asis-brand); display: inline-block; }
+  .asis-cta { background: var(--asis-brand); color: #fff; font-size: 12px; font-weight: 700; padding: 7px 12px; border-radius: 8px; }
+
+  .asis-hero {
+    padding: 22px 16px 18px;
+    background: linear-gradient(180deg, var(--asis-brand-soft), #fff);
+  }
+  .asis-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--asis-brand-strong);
+    background: var(--asis-brand-soft);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .asis-h1 {
+    margin: 10px 0 0;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .asis-h1 .accent { color: var(--asis-brand); display: block; }
+  .asis-sub { margin: 10px 0 0; font-size: 13px; color: var(--ink-muted); }
+
+  .asis-cost {
+    padding: 18px 16px 22px;
+  }
+  .asis-cost h2 { font-size: 16px; margin: 0 0 10px; font-weight: 800; }
+  .cost-cards { display: grid; gap: 10px; }
+  .cost-card { border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .cost-card .lbl { font-size: 11px; font-weight: 700; color: var(--ink-muted); }
+  .cost-card .big { font-size: 24px; font-weight: 800; margin: 2px 0 8px; }
+  .cost-card.win { border-color: var(--asis-brand); }
+  .cost-card.win .lbl, .cost-card.win .big { color: var(--asis-brand); }
+  .cost-flag {
+    margin-top: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+  .cost-flag.bad { background: var(--asis-danger-soft); color: var(--asis-danger); }
+  .cost-flag.good { background: var(--asis-ok-soft); color: var(--asis-ok); }
+
+  /* ── PROPOSED ─────────────────────────────── */
+  .new-banner {
+    background: var(--new-bar-bg);
+    color: var(--new-bar-ink);
+    font-size: 11.5px;
+    line-height: 1.5;
+    padding: 7px 14px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+  .new-banner b { color: var(--new-navy); font-weight: 700; }
+
+  .new-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .new-header .dot { background: var(--new-accent); }
+  .new-cta { background: var(--new-accent); color: #fff; font-size: 12px; font-weight: 700; padding: 7px 12px; border-radius: 8px; }
+
+  .new-hero {
+    padding: 22px 16px 18px;
+    background: linear-gradient(160deg, #fff2ee, #fff);
+  }
+  .new-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--new-accent-strong);
+    background: var(--new-accent-soft);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .new-h1 {
+    margin: 10px 0 0;
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1.32;
+    letter-spacing: -0.01em;
+    word-break: keep-all;
+  }
+  .new-h1 .accent { color: var(--new-accent); display: block; }
+  .new-sub { margin: 10px 0 0; font-size: 13px; color: var(--ink-muted); }
+
+  .new-photo {
+    margin-top: 14px;
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    position: relative;
+    background:
+      linear-gradient(135deg, #ffd9c8 0%, #ffb199 45%, #ff8b6b 100%);
+  }
+  .new-photo::before,
+  .new-photo::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+  }
+  .new-photo::before {
+    width: 46%; height: 90%; left: 6%; bottom: -18%;
+    background: rgba(255,255,255,0.22);
+  }
+  .new-photo::after {
+    width: 30%; height: 60%; right: 10%; top: -14%;
+    background: rgba(28,44,77,0.14);
+  }
+  .new-photo .tag {
+    position: absolute; left: 10px; top: 10px;
+    background: rgba(255,255,255,0.92);
+    color: var(--new-navy);
+    font-size: 10.5px; font-weight: 700;
+    padding: 4px 8px; border-radius: 999px;
+  }
+  .new-photo .cap {
+    position: absolute; left: 10px; bottom: 10px;
+    color: #fff; font-size: 12px; font-weight: 700;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+  }
+
+  .new-cost {
+    padding: 18px 16px 22px;
+  }
+  .new-cost h2 { font-size: 16px; margin: 0 0 10px; font-weight: 800; }
+  .new-cost .cost-card.win { border-color: var(--new-accent); }
+  .new-cost .cost-card.win .lbl, .new-cost .cost-card.win .big { color: var(--new-accent-strong); }
+  .new-cost .cost-flag.good { background: var(--new-ok-soft); color: var(--new-ok); }
+  .new-cost .cost-flag.bad { background: var(--asis-danger-soft); color: var(--asis-danger); }
+
+  /* ── 하단 변경사항 노트 ─────────────────────────────── */
+  .notes {
+    max-width: 1080px;
+    margin: 40px auto 0;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px 24px;
+  }
+  .notes h3 { margin: 0 0 14px; font-size: 15px; font-weight: 800; }
+  .notes ol { margin: 0; padding-left: 20px; display: grid; gap: 12px; }
+  .notes li { font-size: 13.5px; color: var(--ink); }
+  .notes li b { color: var(--new-accent-strong); }
+  .notes li span.why { display: block; color: var(--ink-muted); font-size: 12.5px; margin-top: 2px; }
+
+  .swatches {
+    max-width: 1080px;
+    margin: 20px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .swatch {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 8px 12px; font-size: 12px;
+  }
+  .swatch i { width: 16px; height: 16px; border-radius: 5px; display: inline-block; border: 1px solid rgba(0,0,0,0.08); }
+</style>
+
+<div class="page-head">
+  <span class="eyebrow">DESIGN PROPOSAL · 코드 미반영</span>
+  <h1>빈자리 랜딩 — 제안 시안 비교</h1>
+  <p>왼쪽은 현재 배포된 화면 그대로, 오른쪽은 지난 피드백(모바일 헤드라인 줄바꿈·색상 톤·데모 배너·사진)을 반영한 제안입니다. 실제 코드는 건드리지 않았고, 마음에 드는 방향이 정해지면 그때 반영합니다.</p>
+</div>
+
+<div class="compare">
+  <div>
+    <div class="col-label is-asis"><span class="tag">AS-IS</span><strong>현재 배포된 화면</strong></div>
+    <div class="frame">
+      <div class="asis-banner"><b>MVP 데모</b> | 실제 매물·실제 결제·법적 계약 체결이 아닙니다. 모든 금액과 상권 정보는 가정된 예시 데이터입니다.</div>
+      <div class="asis-header">
+        <span class="brandmark"><span class="dot"></span>빈자리</span>
+        <span class="asis-cta">시작하기</span>
+      </div>
+      <div class="asis-hero">
+        <span class="asis-badge">단기 임대형 공실 완화 · 모듈형 창업 렌탈</span>
+        <h1 class="asis-h1">일단, 두 달만 해볼까요?<span class="accent">안 맞으면 사이즈 바꾸면 되니까요!</span></h1>
+        <p class="asis-sub">보증금도 권리금도 없이 가볍게 시작하는 창업.</p>
+      </div>
+      <div class="asis-cost">
+        <h2>창업이 어려운 건 아이디어가 아니라 초기비용입니다</h2>
+        <div class="cost-cards">
+          <div class="cost-card">
+            <div class="lbl">정식 창업</div>
+            <div class="big">1억 750만 원</div>
+            <div class="cost-flag bad">실패 시 회수 불가 약 6,000만 원 이상</div>
+          </div>
+          <div class="cost-card win">
+            <div class="lbl">빈자리 · 2개월 시험 운영</div>
+            <div class="big">628만 원</div>
+            <div class="cost-flag good">실패 시 손실 약 478만 원 · 위험 약 92% 감소</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="col-label is-new"><span class="tag">제안</span><strong>변경 방향 반영</strong></div>
+    <div class="frame">
+      <div class="new-banner"><b>MVP 데모</b> · 실제 매물·결제·법적 계약이 아닙니다. 모든 금액은 가정된 예시입니다.</div>
+      <div class="new-header">
+        <span class="brandmark"><span class="dot"></span>빈자리</span>
+        <span class="new-cta">시작하기</span>
+      </div>
+      <div class="new-hero">
+        <span class="new-badge">단기 임대형 공실 완화 · 모듈형 창업 렌탈</span>
+        <h1 class="new-h1">일단, 두 달만<br>해볼까요?<span class="accent">안 맞으면, 사이즈만 바꾸면 되니까요</span></h1>
+        <p class="new-sub">보증금도 권리금도 없이 가볍게 시작하는 창업.</p>
+        <div class="new-photo">
+          <span class="tag">예시 사진</span>
+          <span class="cap">성수동 · 12평 카페 자리</span>
+        </div>
+      </div>
+      <div class="new-cost">
+        <h2>창업이 어려운 건 아이디어가 아니라 초기비용입니다</h2>
+        <div class="cost-cards">
+          <div class="cost-card">
+            <div class="lbl">정식 창업</div>
+            <div class="big">1억 750만 원</div>
+            <div class="cost-flag bad">실패 시 회수 불가 약 6,000만 원 이상</div>
+          </div>
+          <div class="cost-card win">
+            <div class="lbl">빈자리 · 2개월 시험 운영</div>
+            <div class="big">628만 원</div>
+            <div class="cost-flag good">실패 시 손실 약 478만 원 · 위험 약 92% 감소</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="notes">
+  <h3>오른쪽(제안)에서 바뀐 것 5가지</h3>
+  <ol>
+    <li><b>헤드라인 줄바꿈 정리</b> — "까요!" 한 단어가 혼자 남는 걸 막기 위해 의미 단위로 줄을 나누고(keep-all), 폰트 크기를 22px→21px로 살짝 낮췄습니다. 문구 자체도 "되니까요!"→"되니까요"로 끝맺음을 조금 더 담백하게 다듬었습니다.
+      <span class="why">근거: 375px 모바일에서 실측 확인, span이 2줄로 쪼개지며 고아 단어가 발생</span>
+    </li>
+    <li><b>포인트 컬러 추가 (코럴 #FF6A4D)</b> — 구조·정보(헤더, 배지, 텍스트)는 기존 네이비/블루를 유지하고, "시작하기" CTA·절감액 카드처럼 행동을 유도하는 지점에만 따뜻한 코럴을 씁니다. 신뢰는 네이비가, 친근함은 코럴이 맡는 구조입니다.
+      <span class="why">근거: 딥네이비 단일톤이 20-30대 타깃엔 "핀테크·은행 앱"처럼 읽힐 수 있음</span>
+    </li>
+    <li><b>MVP 데모 배너를 경고에서 안내로</b> — 진한 다크 배경·굵은 대비를 옅은 그레이 배경·중간 굵기로 낮췄습니다. 문구는 그대로 유지했습니다(법적으로 필요한 고지라 삭제하지 않음).
+      <span class="why">이미 지난 피드백에서 footer 고지는 낮췄고, 이번엔 상단 배너도 같은 톤으로 맞춤</span>
+    </li>
+    <li><b>공간 사진 자리 추가</b> — "가짜 매물 아님" 고지는 그대로 두되, 히어로 하단에 대표 공간 이미지를 한 장 얹어 각인력을 높였습니다. (지금은 목업이라 그라디언트로 대체했고, 실제 반영 시엔 저작권 프리 스톡사진이나 실제 촬영 사진을 씁니다.)
+      <span class="why">근거: 현재 사이트는 카드 안에만 추상 SVG가 있고, 랜딩 첫 화면엔 이미지가 전혀 없음</span>
+    </li>
+    <li><b>비용 비교 카드는 그대로 유지</b> — 숫자와 레이아웃은 이미 효과적이라 손대지 않았고, 승자 카드(빈자리)의 강조색만 브랜드 블루→코럴로 바꿔서 "이득" 느낌을 더 뚜렷하게 했습니다.
+      <span class="why">정보 위계 자체는 문제 없었던 부분 — 색만 교체</span>
+    </li>
+  </ol>
+</div>
+
+<div class="swatches">
+  <div class="swatch"><i style="background:#1c2c4d"></i>--new-navy 구조/신뢰</div>
+  <div class="swatch"><i style="background:#2456c6"></i>--new-brand 링크/보조</div>
+  <div class="swatch"><i style="background:#ff6a4d"></i>--new-accent CTA/포인트</div>
+  <div class="swatch"><i style="background:#ffe6e0"></i>--new-accent-soft 배지/배경</div>
+  <div class="swatch"><i style="background:#1f7a4d"></i>--new-ok 성공/절감</div>
+</div>

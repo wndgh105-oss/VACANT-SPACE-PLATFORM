@@ -6,11 +6,11 @@ export function DemoBanner() {
   return (
     <div
       role="note"
-      className="bg-[var(--ink)] px-4 py-2 text-center text-[13px] leading-snug text-[#E7ECF5]"
+      className="border-b border-[var(--line)] bg-[var(--surface-alt)] px-4 py-1.5 text-center text-[12px] leading-snug text-[var(--ink-muted)]"
     >
-      <span className="font-semibold text-white">MVP 데모</span>
-      <span className="mx-2 opacity-50">|</span>
-      실제 매물·실제 결제·법적 계약 체결이 아닙니다. 모든 금액과 상권 정보는 가정된 예시 데이터입니다.
+      <span className="font-semibold text-[var(--ink)]">MVP 데모</span>
+      <span className="mx-2 opacity-50">·</span>
+      실제 매물·결제·법적 계약이 아닙니다. 모든 금액은 가정된 예시입니다.
     </div>
   )
 }
