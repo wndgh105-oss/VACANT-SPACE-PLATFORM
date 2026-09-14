@@ -239,13 +239,36 @@ async function main() {
   await wait(1500)
   await shot(page, '15-teaser-share')
 
-  // ── 장면 10. 건물주: 공실 → 계약 전환 ─────────────────────
+  // ── 장면 10. 운영자: 현장 실사 승인 ────────────────────────
+  await logout(page)
+  await login(page, 'admin@demo.kr')
+  await page.goto(`${BASE}/admin/overview`)
+  await page.waitForLoadState('networkidle')
+  await wait(1600)
+  await shot(page, '16-admin-review-queue')
+  const approveBtn = page.getByRole('button', { name: '실사 승인' }).first()
+  if (await approveBtn.count()) {
+    await approveBtn.click()
+    await wait(1500)
+    await shot(page, '17-admin-review-approved')
+  }
+
+  // ── 장면 11. 건물주: 실사 통과 알림 + 계약 전환 ────────────
   await logout(page)
   await login(page, 'landlord@demo.kr')
   await page.goto(`${BASE}/landlord`)
   await page.waitForLoadState('networkidle')
   await wait(1700)
-  await shot(page, '16-landlord-dashboard')
+  await shot(page, '18-landlord-dashboard')
+
+  const bell = page.getByRole('button', { name: '알림' })
+  if (await bell.count()) {
+    await bell.click()
+    await wait(900)
+    await shot(page, '19-landlord-notification')
+    await bell.click()
+    await wait(300)
+  }
 
   const manage = page.getByRole('link', { name: '관리' }).first()
   if (await manage.count()) {
@@ -255,14 +278,29 @@ async function main() {
     const startBtn = page.getByRole('button', { name: '상담 시작' }).first()
     if (await startBtn.count()) {
       await startBtn.click()
+      const confirmBtn = page.getByRole('button', { name: '계약 확정' }).first()
+      await confirmBtn.waitFor({ timeout: 20_000 })
+      await wait(600)
+      await confirmBtn.click()
+      await page.getByText('계약을 확정했습니다').waitFor({ timeout: 20_000 })
       await wait(1200)
     }
-    const confirmBtn = page.getByRole('button', { name: '계약 확정' }).first()
-    if (await confirmBtn.count()) {
-      await confirmBtn.click()
-      await wait(1800)
-    }
-    await shot(page, '17-landlord-confirmed')
+    await shot(page, '20-landlord-confirmed')
+  }
+
+  // ── 장면 12. 창업자: 계약 확정 알림 ─────────────────────────
+  await logout(page)
+  await login(page, 'tenant@demo.kr')
+  await page.goto(`${BASE}/dashboard`)
+  await page.waitForLoadState('networkidle')
+  await wait(1200)
+  const tenantBell = page.getByRole('button', { name: '알림' })
+  if (await tenantBell.count()) {
+    await tenantBell.click()
+    await wait(900)
+    await shot(page, '21-tenant-notification')
+    await tenantBell.click()
+    await wait(300)
   }
 
   // ── 클로징 ────────────────────────────────────────────────
@@ -270,7 +308,7 @@ async function main() {
   await page.waitForLoadState('networkidle')
   await wait(600)
   await outro(page)
-  await shot(page, '18-outro')
+  await shot(page, '22-outro')
 
   await context.close()
   await browser.close()
