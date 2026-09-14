@@ -50,6 +50,17 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     ? (await prisma.tenancy.count({ where: { applicationId: current.id } })) > 0
     : false
 
+  if (needsTenancy && !alreadyHasTenancy) {
+    // 다른 신청 건이 이미 이 공실을 확정해 갔는지 확인 — 화면이 새로고침되기 전에 두 신청을
+    // 연달아 확정하면 같은 공실에 계약이 중복 생성될 수 있어 여기서 막는다.
+    const conflictingTenancy = await prisma.tenancy.findFirst({
+      where: { listingId: current.listingId, status: 'ACTIVE' },
+    })
+    if (conflictingTenancy) {
+      return NextResponse.json({ error: 'listing_already_confirmed' }, { status: 409 })
+    }
+  }
+
   const operations = [
     prisma.application.update({ where: { id: params.id }, data: { status } }),
     ...(listingStatusUpdate

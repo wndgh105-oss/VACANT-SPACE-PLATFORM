@@ -55,6 +55,9 @@ export default function ListingApplicationsPage({ params }: { params: { id: stri
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       })
+      if (res.status === 409) {
+        throw new Error('이미 다른 신청 건으로 이 공실의 계약이 확정됐어요. 새로고침 후 다시 확인해 주세요.')
+      }
       if (!res.ok) throw new Error('상태를 바꾸지 못했어요. 잠시 후 다시 시도해 주세요.')
       setApplications((prev) => prev?.map((a) => (a.id === id ? { ...a, status } : a)) ?? null)
       setNotice(
