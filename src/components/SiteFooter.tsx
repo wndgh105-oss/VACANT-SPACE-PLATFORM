@@ -28,11 +28,11 @@ export function SiteFooter() {
           </nav>
         </div>
 
-        <p className="mt-8 rounded-[12px] border border-[var(--line)] bg-[var(--surface)] p-4 text-[12px] leading-relaxed text-[var(--ink-muted)]">
-          본 사이트는 창업 아이디어 검증을 위한 <strong className="text-[var(--ink)]">MVP 데모</strong>입니다. 표시된 공간·상권
-          정보·금액은 모두 가정된 예시이며 실제 매물이 아닙니다. 플랫폼은 중개·법률·세무 자문을 제공하지 않으며,
-          단기 임대 계약 구조와 중개 적법성은 변호사·공인중개사 검토 전 단계입니다. 실제 결제·전자계약 기능은
-          구현되어 있지 않습니다.
+        <p className="mt-8 max-w-2xl text-[11px] leading-relaxed text-[var(--ink-muted)] opacity-80">
+          본 사이트는 창업 아이디어 검증을 위한 MVP 데모입니다. 표시된 공간·상권 정보·금액은 모두 가정된
+          예시이며 실제 매물이 아닙니다. 플랫폼은 중개·법률·세무 자문을 제공하지 않으며, 단기 임대 계약
+          구조와 중개 적법성은 변호사·공인중개사 검토 전 단계입니다. 실제 결제·전자계약 기능은 구현되어
+          있지 않습니다.
         </p>
       </div>
     </footer>
