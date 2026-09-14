@@ -187,7 +187,7 @@ User ──< Listing ──< Application >── User(tenant)
 | 모델 | 필드 | 비고 |
 |---|---|---|
 | **User** | id, email, passwordHash, name, role(`TENANT`\|`LANDLORD`\|**`PARTNER`**\|`ADMIN`), **phone**, **verified**, **companyName**, createdAt | `verified`는 데모용 수동 토글 |
-| **Listing** | id, landlordId, **title**, address, **region**, **lat**, **lng**, area, monthlyRent, deposit, **maintenanceFee**, photos[], contractDurations[], businessTypes[], **parking**, **powerKw**, **hasGas**, **hasDrain**, **immediateMoveIn**, **areaSummary**, **recommendedTypes[]**, **description**, status(**`PENDING_REVIEW`**\|`OPEN`\|`CLOSED`), createdAt | 좌표는 자체 SVG 지도 투영에 사용 |
+| **Listing** | id, landlordId, **title**, address, **region**, **lat**, **lng**, area, monthlyRent, deposit, **maintenanceFee**, photos[], contractDurations[], businessTypes[], **parking**, **powerKw**, **hasGas**, **hasDrain**, **immediateMoveIn**, **areaSummary**, **recommendedTypes[]**, **description**, status(**`PENDING_REVIEW`**\|`OPEN`\|`CLOSED`), createdAt | 좌표는 카카오맵 API에 전달돼 실제 지도 위 핀으로 표시됨 |
 | **EquipmentPackage** | id, **partnerId?**, businessType, name, **description**, monthlyFee, **active**, createdAt | 기존 `items String[]` → **EquipmentItem 관계로 승격** |
 | **EquipmentItem** *(신규)* | id, packageId, name, monthlyFee, **optional**, sortOrder | `optional=true`면 체크 해제 가능 |
 | **Quote** *(신규)* | id, tenantId?, listingId, months, spaceTotal, equipmentTotal, addonTotal, grandTotal, savedVsFull, createdAt | 견적 스냅샷 |
