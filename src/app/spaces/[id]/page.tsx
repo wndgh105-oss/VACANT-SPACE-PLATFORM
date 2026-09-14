@@ -164,7 +164,7 @@ export default async function SpaceDetailPage({ params }: { params: { id: string
               <ul className="mt-2 space-y-1 text-[12px] text-[var(--ink-muted)]">
                 <li>보증금 {manWon(baseline.deposit)} · 권리금 {manWon(baseline.premium)}</li>
                 <li>인테리어 {manWon(baseline.interior)} · 장비 {manWon(baseline.equipment)}</li>
-                <li>초기 운영자금 {manWon(baseline.runway)}</li>
+                <li>간판·집기 {manWon(baseline.signage)} · 초기 운영자금 {manWon(baseline.runway)}</li>
               </ul>
             </div>
 

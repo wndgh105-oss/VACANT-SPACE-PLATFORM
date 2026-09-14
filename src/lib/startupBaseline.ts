@@ -12,6 +12,8 @@ export type StartupBaseline = {
   interiorPerPyeong: number
   /** 장비 구매 비용 */
   equipment: number
+  /** 간판·POS·집기 */
+  signage: number
   /** 보증금 = 월세 × 배수 */
   depositMultiple: number
   /** 권리금 */
@@ -24,6 +26,7 @@ export const STARTUP_BASELINE: Record<BusinessType, StartupBaseline> = {
   CAFE: {
     interiorPerPyeong: 1_500_000,
     equipment: 15_000_000,
+    signage: 5_000_000,
     depositMultiple: 20,
     premium: 20_000_000,
     runwayMonths: 3,
@@ -31,6 +34,7 @@ export const STARTUP_BASELINE: Record<BusinessType, StartupBaseline> = {
   RETAIL: {
     interiorPerPyeong: 900_000,
     equipment: 5_000_000,
+    signage: 3_000_000,
     depositMultiple: 15,
     premium: 15_000_000,
     runwayMonths: 2,
@@ -38,6 +42,7 @@ export const STARTUP_BASELINE: Record<BusinessType, StartupBaseline> = {
   OFFICE: {
     interiorPerPyeong: 700_000,
     equipment: 4_000_000,
+    signage: 1_000_000,
     depositMultiple: 10,
     premium: 0,
     runwayMonths: 3,
@@ -45,6 +50,7 @@ export const STARTUP_BASELINE: Record<BusinessType, StartupBaseline> = {
   STUDY: {
     interiorPerPyeong: 800_000,
     equipment: 6_000_000,
+    signage: 1_000_000,
     depositMultiple: 10,
     premium: 0,
     runwayMonths: 3,
@@ -52,6 +58,7 @@ export const STARTUP_BASELINE: Record<BusinessType, StartupBaseline> = {
   OTHER: {
     interiorPerPyeong: 800_000,
     equipment: 5_000_000,
+    signage: 2_000_000,
     depositMultiple: 12,
     premium: 5_000_000,
     runwayMonths: 3,
@@ -63,6 +70,7 @@ export type FullStartupBreakdown = {
   premium: number
   interior: number
   equipment: number
+  signage: number
   runway: number
   total: number
 }
@@ -80,12 +88,13 @@ export function fullStartupCost(params: {
   const deposit = params.monthlyRent * base.depositMultiple
   const interior = Math.round(params.area * base.interiorPerPyeong)
   const runway = params.monthlyRent * base.runwayMonths
-  const total = deposit + base.premium + interior + base.equipment + runway
+  const total = deposit + base.premium + interior + base.equipment + base.signage + runway
   return {
     deposit,
     premium: base.premium,
     interior,
     equipment: base.equipment,
+    signage: base.signage,
     runway,
     total,
   }
