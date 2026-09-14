@@ -50,9 +50,13 @@ async function resetDemoState() {
     })
     const ids = targets.map((t) => t.id)
     if (ids.length) {
+      // 이전 녹화에서 계약까지 확정됐다면 Tenancy가 남아있어, 재녹화 시
+      // 같은 공실을 다시 확정하려 할 때 X17 중복 계약 가드(409)에 막힌다.
+      // 자막·리뷰는 onDelete: Cascade라 Tenancy만 지우면 함께 정리된다.
+      await prisma.tenancy.deleteMany({ where: { listingId: { in: ids } } })
       await prisma.application.deleteMany({ where: { tenantId: tenant.id, listingId: { in: ids } } })
       await prisma.listing.updateMany({
-        where: { id: { in: ids }, status: 'CLOSED' },
+        where: { id: { in: ids } },
         data: { status: 'OPEN' },
       })
     }
