@@ -5,6 +5,7 @@ vi.mock('@/lib/auth', () => ({ authOptions: {} }))
 vi.mock('@/lib/prisma', () => ({
   prisma: { application: { findFirst: vi.fn(), create: vi.fn() } },
 }))
+vi.mock('@/lib/notify', () => ({ notify: vi.fn() }))
 
 import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/prisma'
@@ -40,7 +41,11 @@ describe('POST /api/applications', () => {
   it('creates application and returns 201', async () => {
     vi.mocked(getServerSession).mockResolvedValue({ user: { id: 't1', role: 'TENANT' } } as never)
     vi.mocked(prisma.application.findFirst).mockResolvedValue(null)
-    vi.mocked(prisma.application.create).mockResolvedValue({ id: 'a1', status: 'PENDING' } as never)
+    vi.mocked(prisma.application.create).mockResolvedValue({
+      id: 'a1',
+      status: 'PENDING',
+      listing: { id: 'l1', title: '연무장길 코너', address: '서울 성동구', landlordId: 'landlord1' },
+    } as never)
 
     const res = await POST(
       makeRequest({ listingId: 'l1', applicantName: 'A', phone: '010', desiredDuration: 2, desiredStartDate: '2026-10-01' })

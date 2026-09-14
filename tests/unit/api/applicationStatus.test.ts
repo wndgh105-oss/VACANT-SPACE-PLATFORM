@@ -8,10 +8,13 @@ vi.mock('@/lib/prisma', () => ({
     $transaction: vi.fn(),
   },
 }))
+vi.mock('@/lib/notify', () => ({ notify: vi.fn() }))
 
 import { requireAdmin } from '@/lib/requireAdmin'
 import { prisma } from '@/lib/prisma'
 import { PATCH } from '@/app/api/applications/[id]/route'
+
+const LISTING = { id: 'l1', title: '연무장길 코너', address: '서울 성동구' }
 
 function makeRequest(body: unknown) {
   return new Request('http://localhost/api/applications/a1', {
@@ -42,7 +45,7 @@ describe('PATCH /api/applications/:id', () => {
 
   it('updates application and closes the listing when confirming', async () => {
     vi.mocked(requireAdmin).mockResolvedValue({ ok: true, session: {} as never })
-    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1' } as never)
+    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1', tenantId: 't1', listing: LISTING } as never)
     vi.mocked(prisma.application.update).mockResolvedValue({ id: 'a1', status: 'CONFIRMED', listingId: 'l1' } as never)
     vi.mocked(prisma.listing.update).mockResolvedValue({ id: 'l1', status: 'CLOSED' } as never)
 
@@ -53,7 +56,7 @@ describe('PATCH /api/applications/:id', () => {
 
   it('reopens the listing when moving an application away from CONFIRMED', async () => {
     vi.mocked(requireAdmin).mockResolvedValue({ ok: true, session: {} as never })
-    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'CONFIRMED', listingId: 'l1' } as never)
+    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'CONFIRMED', listingId: 'l1', tenantId: 't1', listing: LISTING } as never)
     vi.mocked(prisma.application.update).mockResolvedValue({ id: 'a1', status: 'REJECTED', listingId: 'l1' } as never)
     vi.mocked(prisma.listing.update).mockResolvedValue({ id: 'l1', status: 'OPEN' } as never)
 
@@ -64,7 +67,7 @@ describe('PATCH /api/applications/:id', () => {
 
   it('does not touch the listing when the transition does not involve CONFIRMED', async () => {
     vi.mocked(requireAdmin).mockResolvedValue({ ok: true, session: {} as never })
-    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1' } as never)
+    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1', tenantId: 't1', listing: LISTING } as never)
     vi.mocked(prisma.application.update).mockResolvedValue({ id: 'a1', status: 'CONTACTING', listingId: 'l1' } as never)
 
     await PATCH(makeRequest({ status: 'CONTACTING' }), { params: { id: 'a1' } })
@@ -83,7 +86,7 @@ describe('PATCH /api/applications/:id', () => {
 
   it('only ever writes the client-supplied status field (no mass-assignment)', async () => {
     vi.mocked(requireAdmin).mockResolvedValue({ ok: true, session: {} as never })
-    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1' } as never)
+    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1', tenantId: 't1', listing: LISTING } as never)
     vi.mocked(prisma.application.update).mockResolvedValue({ id: 'a1', status: 'CONTACTING', listingId: 'l1' } as never)
 
     await PATCH(
@@ -102,7 +105,7 @@ describe('PATCH /api/applications/:id', () => {
 
   it('wraps the application update and the listing update in a single $transaction call when confirming', async () => {
     vi.mocked(requireAdmin).mockResolvedValue({ ok: true, session: {} as never })
-    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1' } as never)
+    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1', tenantId: 't1', listing: LISTING } as never)
     vi.mocked(prisma.application.update).mockResolvedValue({ id: 'a1', status: 'CONFIRMED', listingId: 'l1' } as never)
     vi.mocked(prisma.listing.update).mockResolvedValue({ id: 'l1', status: 'CLOSED' } as never)
 
@@ -115,7 +118,7 @@ describe('PATCH /api/applications/:id', () => {
 
   it('wraps only the application update in $transaction when the listing is not touched', async () => {
     vi.mocked(requireAdmin).mockResolvedValue({ ok: true, session: {} as never })
-    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1' } as never)
+    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1', tenantId: 't1', listing: LISTING } as never)
     vi.mocked(prisma.application.update).mockResolvedValue({ id: 'a1', status: 'CONTACTING', listingId: 'l1' } as never)
 
     await PATCH(makeRequest({ status: 'CONTACTING' }), { params: { id: 'a1' } })
@@ -127,7 +130,7 @@ describe('PATCH /api/applications/:id', () => {
 
   it('does not persist the application update if the listing update in the transaction fails', async () => {
     vi.mocked(requireAdmin).mockResolvedValue({ ok: true, session: {} as never })
-    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1' } as never)
+    vi.mocked(prisma.application.findUnique).mockResolvedValue({ id: 'a1', status: 'PENDING', listingId: 'l1', tenantId: 't1', listing: LISTING } as never)
     vi.mocked(prisma.application.update).mockResolvedValue({ id: 'a1', status: 'CONFIRMED', listingId: 'l1' } as never)
     vi.mocked(prisma.listing.update).mockResolvedValue({ id: 'l1', status: 'CLOSED' } as never)
     // Simulate a real DB transaction: if any operation fails, $transaction rejects as a whole.
