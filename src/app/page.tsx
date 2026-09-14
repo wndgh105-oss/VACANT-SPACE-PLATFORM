@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { prisma } from '@/lib/prisma'
 import { SpaceCard } from '@/components/SpaceCard'
 import { listingCardSelect } from '@/lib/listingSelect'
@@ -73,14 +74,16 @@ export default async function LandingPage() {
           </div>
 
           <div className="vs-rise mt-8 max-w-3xl overflow-hidden rounded-[16px]">
-            <div
-              className="relative aspect-[21/9] w-full sm:aspect-[3/1]"
-              style={{
-                background: 'linear-gradient(135deg, #ffd9c8 0%, #ffb199 45%, #ff8b6b 100%)',
-              }}
-              role="img"
-              aria-label="예시 이미지 — 성수동 12평 카페 자리 (실제 사진 아님)"
-            >
+            <div className="relative aspect-[21/9] w-full sm:aspect-[3/1]">
+              <Image
+                src="/images/hero-cafe.jpg"
+                alt="카페형 공간 예시 이미지 (실제 등록 매물 사진 아님)"
+                fill
+                priority
+                sizes="(min-width: 1180px) 1180px, 100vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
               <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold text-[var(--ink)]">
                 예시 이미지
               </span>
